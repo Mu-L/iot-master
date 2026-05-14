@@ -158,6 +158,11 @@
                   "type": "number",
                   "min": 0,
                   "max": 63
+                },
+                {
+                  "key": "not",
+                  "label": "取反",
+                  "type": "switch"
                 }
               ]
             }

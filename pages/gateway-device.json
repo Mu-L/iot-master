@@ -15,16 +15,25 @@
       }
     },
      {
-      "label": "导入子设备",
+      "label": "导入",
       "icon": "upload",
       "type": "button",
       "action": {
-        "type": "page",
+        "type": "dialog",
         "page": "device-import",
         "params_func": "return {gateway_id: this.params.gateway_id}"
       }
     },
-
+    {
+      "label": "导出",
+      "icon": "download",
+      "type": "button",
+      "action": {
+        "type": "dialog",
+        "page": "device-export",
+        "params_func": "return {filter: JSON.stringify(this.$event.filter)}"
+      }
+    },
     {
       "label": "批量删除",
       "icon": "delete",
@@ -33,6 +42,42 @@
       "action": {
         "type": "script",
         "script": "this.table.selects.forEach(id=>this.request.get('table/device/delete/'+id).subscribe(res=>{this.load()}))"
+      }
+    },
+    {
+      "key": "online",
+      "type": "select",
+      "label": "状态",
+      "options": [
+        {
+          "label": "不过滤"
+        },
+        {
+          "label": "在线",
+          "value": 1
+        },
+        {
+          "label": "离线",
+          "value": 0
+        }
+      ],
+      "change_action": {
+        "type": "script",
+        "script": "setTimeout(()=>{this.filter.online=this.toolbar.value.online; this.load()},100)"
+      }
+    },
+    {
+      "key": "product_id",
+      "type": "select",
+      "label": "产品",
+      "options": [
+        {
+          "label": "不过滤"
+        }
+      ],
+      "change_action": {
+        "type": "script",
+        "script": "setTimeout(()=>{this.filter.product_id=this.toolbar.value.product_id; this.load()},100)"
       }
     },
     {
@@ -98,8 +143,9 @@
       "key": "id",
       "label": "ID",
       "action": {
-        "type": "script",
-        "script": "this.navigate('/page/device-detail?id='+data.id)"
+        "type": "page",
+        "page":"device-detail",
+        "params_func": "return {id: data.id}"
       },
       "sortable": true
     },
@@ -147,9 +193,11 @@
   "search_api": "table/device/search",
   "mounts": [
     "this.filter.gateway_id=this.params.gateway_id;",
-    "this.get_extend_fields();"
+    "this.get_extend_fields();",
+    "if(!this.params.product_id) this.request.post('table/product/search',{limit:999}).subscribe(res=>{if(res.error)return; this.put_products(res.data) })"
   ],
   "methods": {
-    "get_extend_fields": "this.request.get('device/extend/fields').subscribe(res=>{if(res.error)return; res.data.map(f=>this.content.columns.push(f)) })"
+    "get_extend_fields": "this.request.get('device/extend/fields').subscribe(res=>{if(res.error)return; res.data.map(f=>this.content.columns.push(f)) })",
+    "put_products": ["products", "this.content.toolbar[5].options = [{label:'不过滤'}].concat(products.map(p=>{return {value:p.id,label:p.name}}))"]
   }
 }

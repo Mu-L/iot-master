@@ -59,6 +59,12 @@
       "default": "false"
     },
     {
+      "name": "remote_control",
+      "comment": "远程控制",
+      "type": "bool",
+      "default": "false"
+    },
+    {
       "name": "programmable",
       "comment": "可编程",
       "type": "bool",
@@ -67,6 +73,12 @@
     {
       "name": "configurable",
       "comment": "可配置",
+      "type": "bool",
+      "default": "false"
+    },
+    {
+      "name": "ota",
+      "comment": "远程升级",
       "type": "bool",
       "default": "false"
     },

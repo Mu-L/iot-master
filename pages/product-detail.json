@@ -8,7 +8,7 @@
       "label": "编辑",
       "action": {
         "type": "dialog",
-        "page":"product-edit",
+        "page": "product-edit",
         "params_func": "return {id: data.id}",
         "after_close": "this.load()"
       }
@@ -76,41 +76,50 @@
     }
   ],
   "load_api": "table/product/detail/:id",
+  "load_success": "this.add_tab_settings();this.add_tab_actions();this.add_tab_validators();this.add_tab_versions();",
   "tabs": [
     {
       "title": "产品设备",
-      "page":"device",
+      "page": "device",
       "params_func": "return {product_id: params.id}"
     },
     {
       "title": "物模型",
-      "page":"product-setting-model",
+      "page": "product-setting-model",
       "params_func": "return {id: params.id}"
-    },
-    {
-      "title": "配置参数",
-      "page":"product-setting-setting",
-      "params_func": "return {id: params.id}"
-    },
-    {
-      "title": "设备操作",
-      "page":"product-setting-action",
-      "params_func": "return {id: params.id}"
-    },
-    {
-      "title": "数值检查",
-      "page":"product-setting-validator",
-      "params_func": "return {id: params.id}"
-    },
-    {
-      "title": "固件版本",
-      "page":"version",
-      "params_func": "return {product_id: params.id}"
     },
     {
       "title": "物模型(旧)",
-      "page":"product-model",
+      "page": "product-model",
       "params_func": "return {id: params.id}"
     }
-  ]
+  ],
+  "methods": {
+    "add_tab_settings": "if(data.configurable)this.tabs.push(this.content.other_tabs.settings)",
+    "add_tab_actions": "if(data.remote_control)this.tabs.push(this.content.other_tabs.actions)",
+    "add_tab_validators": "if(data.validate)this.tabs.push(this.content.other_tabs.validators)",
+    "add_tab_versions": "if(data.ota)this.tabs.push(this.content.other_tabs.versions)"
+  },
+  "other_tabs": {
+    "settings": {
+      "title": "配置参数",
+      "page": "product-setting-setting",
+      "params_func": "return {id: params.id}"
+    },
+    "actions": {
+      "title": "设备操作",
+      "page": "product-setting-action",
+      "params_func": "return {id: params.id}"
+    },
+    "validators": {
+      "title": "数值检查",
+      "page": "product-setting-validator",
+      "params_func": "return {id: params.id}"
+    },
+    "versions": {
+      "title": "固件版本",
+      "page": "version",
+      "params_func": "return {product_id: params.id}"
+    }
+  }
 }
